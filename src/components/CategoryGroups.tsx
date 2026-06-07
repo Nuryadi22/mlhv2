@@ -56,6 +56,9 @@ export default function CategoryGroups({ categories, onViewDetails, showAccounts
     if (cleanName.includes("HIBURAN")) {
       return { icon: Tv, color: "#64748b" };
     }
+    if (cleanName.includes("NURYADI")) {
+      return { icon: ShieldCheck, color: "#10b981" };
+    }
     if (cleanName.includes("ASN") || cleanName.includes("PORTAL")) {
       return { icon: Monitor, color: "#0f766e" };
     }

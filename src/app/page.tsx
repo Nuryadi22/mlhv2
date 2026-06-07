@@ -12,13 +12,15 @@ import {
   CheckCircle2,
   Calendar,
   Sun,
-  Moon
+  Moon,
+  Lock
 } from "lucide-react";
 import { accountsData, Category } from "@/data/accounts";
 import Login from "@/components/Login";
 import DashboardTable from "@/components/DashboardTable";
 import CategoryGroups from "@/components/CategoryGroups";
 import DetailsModal from "@/components/DetailsModal";
+import UnlockModal from "@/components/UnlockModal";
 
 interface FlatAccount {
   categoryId: string;
@@ -45,6 +47,10 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
   
+  // Nuryadi Category protection states
+  const [isNuryadiUnlocked, setIsNuryadiUnlocked] = useState<boolean>(false);
+  const [isUnlockModalOpen, setIsUnlockModalOpen] = useState<boolean>(false);
+  
   // Toast notifications state
   const [toast, setToast] = useState<{ show: boolean; message: string }>({
     show: false,
@@ -56,6 +62,11 @@ export default function Home() {
     const authStatus = sessionStorage.getItem("mlh_auth");
     if (authStatus === "true") {
       setIsAuthenticated(true);
+    }
+    
+    const nuryadiStatus = sessionStorage.getItem("mlh_nuryadi_unlocked");
+    if (nuryadiStatus === "true") {
+      setIsNuryadiUnlocked(true);
     }
     
     // Load theme
@@ -105,6 +116,9 @@ export default function Home() {
   const flatAccounts = useMemo(() => {
     const list: FlatAccount[] = [];
     accountsData.forEach((cat) => {
+      if (cat.id === "nuryadi" && !isNuryadiUnlocked) {
+        return;
+      }
       cat.applications.forEach((app) => {
         if (app.accounts.length === 0) {
           list.push({
@@ -136,7 +150,7 @@ export default function Home() {
       });
     });
     return list;
-  }, []);
+  }, [isNuryadiUnlocked]);
 
   // Filter accounts for the table view
   const filteredFlatAccounts = useMemo(() => {
@@ -163,6 +177,12 @@ export default function Home() {
   // Filter categories and apps for the cards view
   const filteredGroupData = useMemo(() => {
     return accountsData
+      .filter((cat) => {
+        if (cat.id === "nuryadi" && !isNuryadiUnlocked) {
+          return false;
+        }
+        return true;
+      })
       .map((cat) => {
         const matchedApps = cat.applications.filter((app) => {
           // Filter by category
@@ -191,14 +211,19 @@ export default function Home() {
         };
       })
       .filter((cat) => cat.applications.length > 0);
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, searchQuery, isNuryadiUnlocked]);
 
   // Calculate statistics
   const stats = useMemo(() => {
+    let totalCategories = 0;
     let totalApps = 0;
     let totalAccounts = 0;
     
     accountsData.forEach((cat) => {
+      if (cat.id === "nuryadi" && !isNuryadiUnlocked) {
+        return;
+      }
+      totalCategories++;
       totalApps += cat.applications.length;
       cat.applications.forEach((app) => {
         // Only count accounts that have actual username or password
@@ -207,11 +232,20 @@ export default function Home() {
     });
 
     return {
-      totalCategories: accountsData.length,
+      totalCategories,
       totalApps,
       totalAccounts
     };
-  }, []);
+  }, [isNuryadiUnlocked]);
+
+  const handleViewDetails = (appId: string) => {
+    const cat = accountsData.find((c) => c.applications.some((app) => app.id === appId));
+    if (cat && cat.id === "nuryadi" && !isNuryadiUnlocked) {
+      setIsUnlockModalOpen(true);
+    } else {
+      setSelectedAppId(appId);
+    }
+  };
 
   if (isMounting) {
     return (
@@ -357,13 +391,22 @@ export default function Home() {
           </button>
           {accountsData.map((cat) => {
             const count = flatAccounts.filter(acc => acc.categoryId === cat.id).length;
+            const isLocked = cat.id === "nuryadi" && !isNuryadiUnlocked;
             return (
               <button
                 key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
+                onClick={() => {
+                  if (isLocked) {
+                    setIsUnlockModalOpen(true);
+                  } else {
+                    setSelectedCategory(cat.id);
+                  }
+                }}
                 className={`chip ${selectedCategory === cat.id ? "active" : ""}`}
+                style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
               >
-                {cat.name} ({count})
+                {cat.name}
+                {isLocked ? <Lock size={12} style={{ opacity: 0.8 }} /> : `(${count})`}
               </button>
             );
           })}
@@ -373,13 +416,13 @@ export default function Home() {
         {activeTab === "table" ? (
           <DashboardTable 
             accounts={filteredFlatAccounts} 
-            onViewDetails={(appId) => setSelectedAppId(appId)}
+            onViewDetails={handleViewDetails}
             triggerToast={triggerToast}
           />
         ) : (
           <CategoryGroups 
             categories={filteredGroupData} 
-            onViewDetails={(appId) => setSelectedAppId(appId)}
+            onViewDetails={handleViewDetails}
             showAccountsPreview={selectedCategory !== "all"}
           />
         )}
@@ -402,6 +445,19 @@ export default function Home() {
           appId={selectedAppId}
           categories={accountsData}
           onClose={() => setSelectedAppId(null)}
+          triggerToast={triggerToast}
+        />
+      )}
+
+      {/* Unlock Category Password Modal */}
+      {isUnlockModalOpen && (
+        <UnlockModal
+          onClose={() => setIsUnlockModalOpen(false)}
+          onUnlockSuccess={() => {
+            setIsNuryadiUnlocked(true);
+            sessionStorage.setItem("mlh_nuryadi_unlocked", "true");
+            setSelectedCategory("nuryadi");
+          }}
           triggerToast={triggerToast}
         />
       )}

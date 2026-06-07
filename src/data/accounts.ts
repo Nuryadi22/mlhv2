@@ -61,7 +61,7 @@ export const accountsData: Category[] = [
           { id: "emis-dev-4", name: "NUR MALIHAH", username: "91000089119446", password: "356328" },
           { id: "emis-dev-5", name: "YUNI SUSANTI", username: "91000089130562", password: "463394" },
           { id: "emis-dev-6", name: "BAYU CRISTIYANTO NURROHMAN", username: "20212257100003", password: "462514" },
-          { id: "emis-dev-7", name: "SIFA FAUziah", username: "20212174192002", password: "942699" },
+          { id: "emis-dev-7", name: "Sifa Fauziah", username: "20212174192002", password: "942699" },
           { id: "emis-dev-8", name: "Eka Mulkiatul Hasanah", username: "20212174193002", password: "338783" },
           { id: "emis-dev-9", name: "WIDAYANTI", username: "20212174184001", password: "515672" },
           { id: "emis-dev-10", name: "NURYADI", username: "20212174199001", password: "391679" }
@@ -344,6 +344,25 @@ export const accountsData: Category[] = [
         link: "https://www.ayopramuka-kwarnas.id/",
         accounts: [
           { id: "ayo-pramuka-1", name: "Admin", username: "mi.insancita@gmail.com", password: "Abditam@22" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "nuryadi",
+    name: "Nuryadi",
+    applications: [
+      {
+        id: "akun-nuryadi",
+        name: "Akun Nuryadi",
+        link: "",
+        accounts: [
+          {
+            id: "akun-nuryadi-1",
+            name: "Email 1",
+            username: "wisnunuryadi5@gmail.com",
+            password: "Perselak011"
+          }
         ]
       }
     ]
