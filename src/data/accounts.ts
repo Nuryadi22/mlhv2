@@ -362,6 +362,54 @@ export const accountsData: Category[] = [
             name: "Email 1",
             username: "wisnunuryadi5@gmail.com",
             password: "Perselak011"
+          },
+          {
+            id: "akun-nuryadi-2",
+            name: "Email sibermu",
+            username: "nuryadi20250100165@sibermu.ac.id",
+            password: "Perselak015"
+          },
+          {
+            id: "akun-nuryadi-3",
+            name: "Email nyd graph",
+            username: "nydgraph.id@gmail.com",
+            password: "Persel@k015"
+          },
+          {
+            id: "akun-nuryadi-4",
+            name: "Email rahmanulkahfi",
+            username: "rahmanulkahfi15@gmail.com",
+            password: "Perselak015"
+          },
+          {
+            id: "akun-nuryadi-5",
+            name: "BRImo",
+            username: "nuryadi112299",
+            password: "Perselak015"
+          },
+          {
+            id: "akun-nuryadi-6",
+            name: "Instagram",
+            username: "rahmannulkahfi",
+            password: "Perselak011"
+          },
+          {
+            id: "akun-nuryadi-7",
+            name: "Facebook",
+            username: "wisnunuryadi@yahoo.com",
+            password: "Perselak015"
+          },
+          {
+            id: "akun-nuryadi-8",
+            name: "Tiktok",
+            username: "085862777511",
+            password: "Perselak015"
+          },
+          {
+            id: "akun-nuryadi-9",
+            name: "SSCASC",
+            username: "rahmanulkahfi15@gmail.com",
+            password: "Persel@k015"
           }
         ]
       }
