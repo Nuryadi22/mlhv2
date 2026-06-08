@@ -98,6 +98,15 @@ export default function Home() {
     }
   }, [toast.show]);
 
+  // Automatically lock Nuryadi category when switching away from it
+  useEffect(() => {
+    if (selectedCategory !== "nuryadi" && isNuryadiUnlocked) {
+      setIsNuryadiUnlocked(false);
+      sessionStorage.removeItem("mlh_nuryadi_unlocked");
+      triggerToast("Kategori Nuryadi otomatis dikunci kembali.");
+    }
+  }, [selectedCategory, isNuryadiUnlocked]);
+
   const toggleTheme = () => {
     const nextTheme = theme === "dark" ? "light" : "dark";
     setTheme(nextTheme);
@@ -108,6 +117,9 @@ export default function Home() {
 
   const handleLogout = () => {
     sessionStorage.removeItem("mlh_auth");
+    sessionStorage.removeItem("mlh_nuryadi_unlocked");
+    setIsNuryadiUnlocked(false);
+    setSelectedCategory("all");
     setIsAuthenticated(false);
     triggerToast("Logout berhasil!");
   };
