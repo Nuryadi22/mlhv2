@@ -21,6 +21,7 @@ import DashboardTable from "@/components/DashboardTable";
 import CategoryGroups from "@/components/CategoryGroups";
 import DetailsModal from "@/components/DetailsModal";
 import UnlockModal from "@/components/UnlockModal";
+import LogoutModal from "@/components/LogoutModal";
 
 interface FlatAccount {
   categoryId: string;
@@ -42,7 +43,7 @@ export default function Home() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   
   // Dashboard states
-  const [activeTab, setActiveTab] = useState<"table" | "cards">("table");
+  const [activeTab, setActiveTab] = useState<"table" | "cards">("cards");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
@@ -50,6 +51,7 @@ export default function Home() {
   // Nuryadi Category protection states
   const [isNuryadiUnlocked, setIsNuryadiUnlocked] = useState<boolean>(false);
   const [isUnlockModalOpen, setIsUnlockModalOpen] = useState<boolean>(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState<boolean>(false);
   
   // Toast notifications state
   const [toast, setToast] = useState<{ show: boolean; message: string }>({
@@ -312,7 +314,7 @@ export default function Home() {
             >
               {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
             </button>
-            <button onClick={handleLogout} className="btn-danger">
+            <button onClick={() => setIsLogoutModalOpen(true)} className="btn-danger">
               <LogOut size={16} />
               <span>Keluar</span>
             </button>
@@ -444,11 +446,9 @@ export default function Home() {
       {/* Footer */}
       <footer className="app-footer">
         <p>
-          Madrasah Link Hub &copy; {new Date().getFullYear()} - Dibuat untuk mempermudah akses portal sekolah MI Cikembulan & RA As-syifa.
+          Madrasah Link Hub &copy; {new Date().getFullYear()} - Dibuat untuk mempermudah akses portal sekolah MI Cikembulan.
         </p>
-        <p style={{ marginTop: "4px", fontSize: "11px", color: "var(--text-muted)" }}>
-          Keamanan Terjamin • Tersimpan Lokal di Browser • Hosting di Vercel & GitHub
-        </p>
+        <span>By : Nuryadi</span>
       </footer>
 
       {/* Account Details Modal */}
@@ -471,6 +471,17 @@ export default function Home() {
             setSelectedCategory("nuryadi");
           }}
           triggerToast={triggerToast}
+        />
+      )}
+
+      {/* Logout Confirmation Modal */}
+      {isLogoutModalOpen && (
+        <LogoutModal
+          onClose={() => setIsLogoutModalOpen(false)}
+          onConfirm={() => {
+            setIsLogoutModalOpen(false);
+            handleLogout();
+          }}
         />
       )}
 
