@@ -189,6 +189,12 @@ export const accountsData: Category[] = [
         accounts: []
       },
       {
+        id: "cek-pip",
+        name: "CEK PIP KEMENAG",
+        link: "https://madrasah.kemenag.go.id/pip2025",
+        accounts: []
+      },
+      {
         id: "pip-diknas",
         name: "PIP DIKNAS",
         link: "https://pip.kemendikdasmen.go.id/",
